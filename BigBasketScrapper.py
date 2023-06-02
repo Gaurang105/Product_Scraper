@@ -25,19 +25,19 @@ class Scraper:
         self.data = {}
 
     def scrape(self):
-        self._scrape_category_subcategory_product()
-        self._scrape_sku_id()
-        self._scrape_image()
-        self._scrape_brand()
-        self._scrape_sku_name_and_size()
-        self._scrape_mrp_and_selling_price()
-        self._scrape_out_of_stock()
-        self._scrape_product_rating()
-        self._scrape_total_ratings_and_reviews()
-        self._scrape_reviews()
+        self.scrape_category_subcategory_product()
+        self.scrape_sku_id()
+        self.scrape_image()
+        self.scrape_brand()
+        self.scrape_sku_name_and_size()
+        self.scrape_mrp_and_selling_price()
+        self.scrape_out_of_stock()
+        self.scrape_product_rating()
+        self.scrape_total_ratings_and_reviews()
+        self.scrape_reviews()
         print(self.data)
 
-    def _scrape_category_subcategory_product(self):
+    def scrape_category_subcategory_product(self):
         div_category = self.driver.find_element(By.CSS_SELECTOR, "div._3moNK")
         a_tags = div_category.find_elements(By.CSS_SELECTOR, "a._3WUR_._3bj9B.rippleEffect")[1:]
         category, sub_category, product = [a_tag.text.replace(">", "").strip() for a_tag in a_tags]
@@ -45,20 +45,20 @@ class Scraper:
         self.data["Sub-Category"] = sub_category
         self.data["Product"] = product
 
-    def _scrape_sku_id(self):
+    def scrape_sku_id(self):
         self.data["SKU ID"] = self.driver.current_url.split("/")[-3]
 
-    def _scrape_image(self):
+    def scrape_image(self):
         image_div = self.driver.find_element(By.CSS_SELECTOR, "div._2FbOx")
         image = image_div.find_element(By.CSS_SELECTOR, "img._3oKVV").get_attribute("src")
         self.data["Image"] = image
 
-    def _scrape_brand(self):
+    def scrape_brand(self):
         brand_div = self.driver.find_element(By.CSS_SELECTOR, "div._2yfKw")
         brand = brand_div.find_element(By.CSS_SELECTOR, "a._2zLWN._3bj9B.rippleEffect").text
         self.data["Brand"] = brand
 
-    def _scrape_sku_name_and_size(self):
+    def scrape_sku_name_and_size(self):
         sku_div = self.driver.find_element(By.CSS_SELECTOR, "div._2yfKw")
         sku_string = sku_div.find_element(By.CSS_SELECTOR, "h1.GrE04").text
         sku_name = sku_string.split(" - ")[0].strip()
@@ -66,7 +66,7 @@ class Scraper:
         self.data["SKU Name"] = sku_name
         self.data["SKU Size"] = sku_size
 
-    def _scrape_mrp_and_selling_price(self):
+    def scrape_mrp_and_selling_price(self):
         price_div = self.driver.find_element(By.CSS_SELECTOR, "div#price")
         try:
             mrp_element = price_div.find_element(By.CSS_SELECTOR, "td._2ifWF")
@@ -78,7 +78,7 @@ class Scraper:
         self.data["MRP"] = mrp
         self.data["Selling Price"] = selling_price
 
-    def _scrape_out_of_stock(self):
+    def scrape_out_of_stock(self):
         try:
             self.driver.find_element(By.CSS_SELECTOR, "div._36qqs")
             in_stock = "No"
@@ -88,7 +88,7 @@ class Scraper:
         self.data["In Stock"] = in_stock
         self.data["Out of Stock"] = out_of_stock
 
-    def _scrape_product_rating(self):
+    def scrape_product_rating(self):
         try:
             product_rating_element = self.driver.find_element(By.CSS_SELECTOR, "div._2Ze34")
             product_rating = product_rating_element.text
@@ -96,7 +96,7 @@ class Scraper:
             product_rating = "NA"
         self.data["Product Rating"] = product_rating
 
-    def _scrape_total_ratings_and_reviews(self):
+    def scrape_total_ratings_and_reviews(self):
         try:
             review_div = self.driver.find_element(By.CSS_SELECTOR, "div._1AXTE")
             reviews_element = review_div.find_element(By.CSS_SELECTOR, "span[style='color: rgb(74, 74, 74); position: relative; top: 1px;']")
@@ -113,7 +113,7 @@ class Scraper:
         self.data["Total Ratings"] = total_ratings
         self.data["Total Reviews"] = total_reviews
 
-    def _scrape_reviews(self):
+    def scrape_reviews(self):
         try:
             reviews_link_element = self.driver.find_element(By.CSS_SELECTOR, "a._1xG1d")
             reviews_link = reviews_link_element.get_attribute('href')
